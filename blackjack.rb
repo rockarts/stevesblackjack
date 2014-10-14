@@ -1,53 +1,7 @@
 require 'gosu'
 require './cards'
-
-class Player
-    attr_accessor :hand
-
-    def initialize(hand = [])
-        @hand = hand
-    end
-
-    def add_card(card)
-        @hand << card
-    end
-
-    def total
-        @total = 0
-        @hand.each do |card|
-            if(card.value > 10)
-                @total += 10
-            else
-                @total += card.value
-            end    
-        end
-        @total
-    end
-end
-
-class Dealer
-    attr_accessor :player
-
-    def initialize(player)
-        @player = player
-    end
-
-    def add_card(card)
-        @player.add_card(card)
-    end
-
-    def hand
-        @player.hand
-    end
-
-    def total
-        @player.total
-    end
-
-end
-
-#Dealer Rules
-# Must hit until total is >= 17
+require './player'
+require './dealer'
 
 class GameWindow < Gosu::Window
 	attr_accessor :player, :dealer
@@ -126,19 +80,23 @@ class GameWindow < Gosu::Window
     def check_winner
         if @dealer.total > 21 then
             puts "Player win"
+            return
         end
 
         if @player.total > @dealer.total then
             #player win state
             puts "player win"
+            return
         end
 
         if @player.total == @dealer.total then
             puts "push"
+            return
         end
 
         if @dealer.total > @player.total then
             puts "dealer win"
+            return
         end
     end
 
@@ -151,7 +109,6 @@ class GameWindow < Gosu::Window
         
             if(mouse_x > HIT_BUTTON_X && mouse_x < HIT_BUTTON_X + 100) then
                 if(mouse_y > HIT_BUTTON_Y && mouse_y < HIT_BUTTON_Y + 50) then
-                    puts "hit button!"
                     hit
                 end
             end
@@ -164,9 +121,6 @@ class GameWindow < Gosu::Window
                     check_winner
                 end
             end
-
-            puts "HIT_X #{HIT_BUTTON_X} HIT Y #{HIT_BUTTON_Y}"
-            puts "mouse click #{mouse_x}, #{mouse_y}"
         end
     end
 
