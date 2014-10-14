@@ -60,6 +60,8 @@ class GameWindow < Gosu::Window
         end
         
         if(@state != "new")
+            message = Gosu::Font.new(self, Gosu::default_font_name, 200)
+            message.draw(@state, 100, 150, 1.0, 1.0, 1.0)
             @deal_button.draw(DEAL_BUTTON_X, DEAL_BUTTON_Y, 0)
         end
 
@@ -74,12 +76,12 @@ class GameWindow < Gosu::Window
     def win_test
         
         if(@player.total > 21)
-            @state = "loss"
+            @state = "Lose"
             puts @state
         end
         
         if(@player.total == 21)
-            @state = "win"
+            @state = "Win"
             puts @state
 
         end
@@ -89,10 +91,10 @@ class GameWindow < Gosu::Window
     def stand
         deal(@dealer)
 
-        if((@dealer.total >= 17 && @dealer.total <= 21) ) then
+        if((@dealer.total >= 17 && @dealer.total <= 21) || @dealer.total > 21) then
             #End Game State
             puts "stop dealing"
-            @state = "win"
+            @state = "Win"
             puts @state
             return
         else
@@ -102,25 +104,25 @@ class GameWindow < Gosu::Window
 
     def check_winner
         if @dealer.total > 21 then
-            @state = "win"
+            @state = "Win"
             puts @state
             return
         end
 
         if @player.total > @dealer.total then
-            @state = "win"
+            @state = "Win"
             puts @state
             return
         end
 
         if @player.total == @dealer.total then
-            @state = "push"
+            @state = "Push"
             puts @state
             return
         end
 
         if @dealer.total > @player.total then
-            @state = "loss"
+            @state = "Lose"
             puts @state
             return
         end
