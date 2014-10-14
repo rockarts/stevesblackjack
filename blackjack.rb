@@ -11,6 +11,9 @@ class GameWindow < Gosu::Window
 
     STAND_BUTTON_X = 370
     STAND_BUTTON_Y = 240
+    
+    DEAL_BUTTON_X = 370
+    DEAL_BUTTON_Y = 140
 
     def initialize
 		super 640, 480, false
@@ -19,13 +22,18 @@ class GameWindow < Gosu::Window
         @background_image = Gosu::Image.new(self, "tsuitedfelt.jpg", true)
         @hit_button = Gosu::Image.new(self, "hit.png", true)  
         @stand_button = Gosu::Image.new(self, "stand.png", true)  
-		init_cards
+        @deal_button = Gosu::Image.new(self, "deal.png", true)  
+	    reset
+    end
+
+    def reset
+        init_cards
         @player = Player.new
         @dealer = Dealer.new(Player.new)
         deal(@player)
         deal(@player)
         deal(@dealer)
-	end
+    end
 
 	def update
 
@@ -47,7 +55,7 @@ class GameWindow < Gosu::Window
 
         @hit_button.draw(HIT_BUTTON_X, HIT_BUTTON_Y, 0)
         @stand_button.draw(STAND_BUTTON_X, STAND_BUTTON_Y, 0)
-        
+        @deal_button.draw(DEAL_BUTTON_X, DEAL_BUTTON_Y, 0)
         @cursor.draw(self.mouse_x, self.mouse_y, 0)
 	end
 
@@ -98,6 +106,7 @@ class GameWindow < Gosu::Window
             puts "dealer win"
             return
         end
+
     end
 
     def button_down(id)
@@ -121,6 +130,15 @@ class GameWindow < Gosu::Window
                     check_winner
                 end
             end
+            
+            if(mouse_x > DEAL_BUTTON_X && mouse_x < DEAL_BUTTON_X + 100)
+            then
+                if(mouse_y > DEAL_BUTTON_Y && mouse_y <DEAL_BUTTON_Y + 50)
+                then
+                   reset
+                end
+            end
+
         end
     end
 
