@@ -12,7 +12,7 @@ class GameWindow < Gosu::Window
     STAND_BUTTON_X = 370
     STAND_BUTTON_Y = 240
     
-    DEAL_BUTTON_X = 370
+    DEAL_BUTTON_X = 240
     DEAL_BUTTON_Y = 140
 
     def initialize
@@ -28,6 +28,7 @@ class GameWindow < Gosu::Window
 
     def reset
         init_cards
+        @state = "new"
         @player = Player.new
         @dealer = Dealer.new(Player.new)
         deal(@player)
@@ -53,9 +54,15 @@ class GameWindow < Gosu::Window
             card.image.draw(starting_location, 0, 0)
         end
 
-        @hit_button.draw(HIT_BUTTON_X, HIT_BUTTON_Y, 0)
-        @stand_button.draw(STAND_BUTTON_X, STAND_BUTTON_Y, 0)
-        @deal_button.draw(DEAL_BUTTON_X, DEAL_BUTTON_Y, 0)
+        if(@state == "new")
+            @hit_button.draw(HIT_BUTTON_X, HIT_BUTTON_Y, 0)
+            @stand_button.draw(STAND_BUTTON_X, STAND_BUTTON_Y, 0)
+        end
+        
+        if(@state != "new")
+            @deal_button.draw(DEAL_BUTTON_X, DEAL_BUTTON_Y, 0)
+        end
+
         @cursor.draw(self.mouse_x, self.mouse_y, 0)
 	end
 
@@ -67,8 +74,14 @@ class GameWindow < Gosu::Window
     def win_test
         
         if(@player.total > 21)
-            #End Game state
-            puts "Bust"
+            @state = "loss"
+            puts @state
+        end
+        
+        if(@player.total == 21)
+            @state = "win"
+            puts @state
+
         end
         puts @player.total
     end
@@ -76,9 +89,11 @@ class GameWindow < Gosu::Window
     def stand
         deal(@dealer)
 
-        if((@dealer.total >= 17 && @dealer.total <= 21) || @dealer.total > 21) then
+        if((@dealer.total >= 17 && @dealer.total <= 21) ) then
             #End Game State
             puts "stop dealing"
+            @state = "win"
+            puts @state
             return
         else
             stand
@@ -87,23 +102,26 @@ class GameWindow < Gosu::Window
 
     def check_winner
         if @dealer.total > 21 then
-            puts "Player win"
+            @state = "win"
+            puts @state
             return
         end
 
         if @player.total > @dealer.total then
-            #player win state
-            puts "player win"
+            @state = "win"
+            puts @state
             return
         end
 
         if @player.total == @dealer.total then
-            puts "push"
+            @state = "push"
+            puts @state
             return
         end
 
         if @dealer.total > @player.total then
-            puts "dealer win"
+            @state = "loss"
+            puts @state
             return
         end
 
@@ -115,31 +133,24 @@ class GameWindow < Gosu::Window
         end
 
         if button_down?(Gosu::MsLeft)
-        
-            if(mouse_x > HIT_BUTTON_X && mouse_x < HIT_BUTTON_X + 100) then
-                if(mouse_y > HIT_BUTTON_Y && mouse_y < HIT_BUTTON_Y + 50) then
-                    hit
-                end
+            if button_pressed(HIT_BUTTON_X, HIT_BUTTON_Y) then
+                hit
             end
 
-            if(mouse_x > STAND_BUTTON_X && mouse_x < STAND_BUTTON_X + 100)
-            then
-                if(mouse_y > STAND_BUTTON_Y && mouse_y < STAND_BUTTON_Y + 50)
-                then
-                    stand
-                    check_winner
-                end
+            if button_pressed(STAND_BUTTON_X, STAND_BUTTON_Y) then
+                stand
+                check_winner
             end
             
-            if(mouse_x > DEAL_BUTTON_X && mouse_x < DEAL_BUTTON_X + 100)
-            then
-                if(mouse_y > DEAL_BUTTON_Y && mouse_y <DEAL_BUTTON_Y + 50)
-                then
-                   reset
-                end
+            if button_pressed(DEAL_BUTTON_X, DEAL_BUTTON_Y) then
+                reset
             end
 
         end
+    end
+
+    def button_pressed(x, y)
+        return (mouse_x > x && mouse_x < x + 100) && (mouse_y > y && mouse_y < y + 50)
     end
 
 	def init_cards
