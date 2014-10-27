@@ -34,6 +34,7 @@ class GameWindow < Gosu::Window
         deal(@player)
         deal(@player)
         deal(@dealer)
+        win_test
     end
 
 	def update
@@ -65,11 +66,15 @@ class GameWindow < Gosu::Window
             @deal_button.draw(DEAL_BUTTON_X, DEAL_BUTTON_Y, 0)
         end
 
+        player_total = Gosu::Font.new(self, Gosu::default_font_name, 100)
+        player_total.draw(@player.total, 50, 380, 1.0, 1.0, 1.0)
+
         @cursor.draw(self.mouse_x, self.mouse_y, 0)
 	end
 
     def hit
         deal(@player)
+        
         win_test
     end
 

@@ -13,21 +13,24 @@ class Player
 
     def total
         @total = 0
-        @hand.each do |card|
+        
+        @hand.sort { |x,y| y.value <=> x.value }.each do |card|
             if(card.value > 10)
                 @total += 10
             else
                 if(card.value == 1) then
                     if(@total + 11 <= 21) then
                         @total += 11
-                        puts @total
-                        return @total
+                    else
+                        @total += card.value
                     end
+                else
+                    @total += card.value
                 end
-                @total += card.value
             end    
+       puts "Interim Total #{@total} " 
         end
-        
+       puts "Total #{@total} " 
         @total
     end
 end

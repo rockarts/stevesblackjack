@@ -1,22 +1,3 @@
-require 'minitest/autorun'
-
-class TestDeck < MiniTest::Unit::TestCase
-
-  def test_that_deck_has_52_cards
-  	deck = Deck.new
-    assert_equal 52, deck.cards.count
-  end
-
-  def test_that_deck_is_shuffled
-  	deck = Deck.new
-  	original_deck = deck.cards.dup
-  	puts original_deck.inspect
-  	deck.shuffle
-  	refute_equal original_deck, deck.cards
-  end
-
-end
-
 class Deck
 	attr_accessor :cards
 	def initialize(cards = [])
