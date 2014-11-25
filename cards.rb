@@ -10,7 +10,6 @@ class Deck
 	def shuffle
 		@cards.shuffle!
 	end
-
 end
 
 class Card
@@ -19,9 +18,8 @@ class Card
 	def initialize(suit, value, image)
 		@suit = suit
 		@value = value
-        @image = image
+        	@image = image
 	end
-
 end
 
 class Suits
